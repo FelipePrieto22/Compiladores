@@ -1,0 +1,5 @@
+inicio
+leer A4 
+5
+fin
+
