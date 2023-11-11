@@ -72,7 +72,7 @@ inst_leer : LEER PI ID PD {
 
 %%
 
-int main() {
+int main() { 
     yyparse();
     return 0;
 }
