@@ -1,33 +1,35 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "y.tab.h"
-#include "common.h" // Incluye el archivo de definición común
-
-
+void yyerror(const char* s);
+int yywrap();
 %}
 
 %%
 
-inicio   { return INICIO; }
-fin      { return FIN; }
-leer     { return LEER; }
-escribir { return ESCRIBIR; }
-si       { return SI; }
-entonces { return ENTONCES; }
-[A-Z][0-9]+ { yylval.s = strdup(yytext); return IDENTIFICADOR; }
-[0-9]+     { yylval.i = atoi(yytext); return NUMERO; }
-\"[^\"]*\" { yylval.s = strdup(yytext); return CADENA; }
-"<-"       { return ASIGNACION; }
-[-+*/]     { return yytext[0]; } // Tokens para operaciones aritméticas
-[><=]      { return yytext[0]; } // Tokens para operaciones relacionales
+[0-9]+ { yylval.valor = atoi(yytext); return CONST; }
+[A-Z][0-9] { yylval.cadena = strdup(yytext); return ID; }
 
-[ \t\n]    { /* Ignora espacios en blanco y saltos de línea */ }
-.          { yyerror("Carácter ilegal"); }
+["](.*)["]  { yylval.cadena = strdup(yytext + 1); yylval.cadena[strlen(yytext) - 2] = '\0'; return CADENA; }
+"inicio" { return INICIO; }
+"fin" { return FIN; }
+"si" { return SI; }
+"entonces" { return ENTONCES; }
+"leer" { return LEER; }
+"escribir" { return ESCRIBIR; }
+":=" { return ASIGNACION; } 
+[ \t\n] ;
+"(" { return PI; }
+")" { return PD; }
+. { yyerror("Carácter ilegal"); }
 
 %%
 
-void yyerror(const char *s) {
-    fprintf(stderr, "Error léxico: %s\n", s);
+void yyerror(const char* s) {
+    fprintf(stderr, "Error: %s\n", s);
+}
+
+int yywrap() {
+    return 1;
 }

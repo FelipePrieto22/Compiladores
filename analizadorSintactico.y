@@ -1,80 +1,87 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "lex.yy.c"
-#include "common.h" // Incluye el archivo de definición común
+#include <string.h>
 
+int tamaño = 0;
+int valor_leido;
+char* cadena_leida;
+
+struct identificadorConValor {
+  char* nombre;
+  int valor;
+}; 
+
+struct identificadorConValor dictionary[100]; 
+
+int getValue(struct identificadorConValor* identifier);
+void yyerror(const char *s);
+int yylex();
+int yywrap();
 
 %}
 
-%union { int a; }
+%token <cadena> CADENA
+%token <variable> ID
+%token <valor> CONST 
+%token INICIO FIN SI ENTONCES LEER ESCRIBIR ASIGNACION PD PI
 
-YYSTYPE yylval;
-%token INICIO FIN LEER ESCRIBIR SI ENTONCES IDENTIFICADOR NUMERO CADENA ASIGNACION
-
-%%
-
-Prog : INICIO instrucciones FIN
-    ;
-
-instrucciones : instruccion instrucciones
-              | instruccion
-    ;
-
-instruccion : inst_escribir
-            | inst_leer
-            | inst_si
-            | inst_asign
-    ;
-
-inst_escribir : ESCRIBIR '(' cadena_exp ')'
-    ;
-
-cadena_exp : CADENA
-            | IDENTIFICADOR
-    ;
-
-inst_leer : LEER '(' IDENTIFICADOR ')'
-    ;
-
-inst_si : SI cond ENTONCES instruccion
-    ;
-
-inst_asign : IDENTIFICADOR ASIGNACION exp
-    ;
-
-cond : exp '<' exp
-    | exp '>' exp
-    | exp '=' exp
-    ;
-
-exp : term expPrima
-    ;
-
-expPrima : '+' term expPrima
-         | '-' term expPrima
-         |
-    ;
-
-term : factor termPrima
-    ;
-
-termPrima : '*' factor termPrima
-          | '/' factor termPrima
-          |
-    ;
-
-factor : IDENTIFICADOR
-       | NUMERO
-    ;
+%union {
+  int valor;
+  char* cadena;
+  struct identificadorConValor* variable;
+}
 
 %%
 
-int main() {
+prog: INICIO instrucciones FIN {
+  printf("El programa ha sido analizado exitosamente.\n");
+  exit(0);
+}
+
+instrucciones: instruccion instrucciones
+    | instruccion
+  ;
+
+instruccion: inst_escribir
+    | inst_leer
+    | ID ASIGNACION CONST {
+
+      struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+      var->nombre = $1->nombre;
+      var->valor = $3;
+      dictionary[tamaño++] = *var;
+    }
+  ;
+
+inst_escribir : ESCRIBIR PI ID PD {
+  int value = getValue($3);
+  printf("\t %d\n", value);
+}
+    | ESCRIBIR PI CADENA PD {
+    printf("\t %s\n", $3); 
+}
+
+inst_leer : LEER PI ID PD { 
+    scanf("%d", &valor_leido);
+    struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+    var->nombre = $3;
+    var->valor = valor_leido;
+    dictionary[tamaño++] = *var;
+}
+
+%%
+
+int main() { 
     yyparse();
     return 0;
 }
 
-void yyerror(const char *s) {
-    fprintf(stderr, "Error sintáctico: %s\n", s);
+int getValue(struct identificadorConValor* identifier) {
+    for (int i = 0; i < tamaño; i++) {
+        if (strcmp(dictionary[i].nombre, identifier) == 0) {
+            return dictionary[i].valor;
+        }
+    } 
+    return 0;
 }

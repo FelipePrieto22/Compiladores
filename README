@@ -1,4 +1,0 @@
-flex analizadorLexico.lex
-bison -d -o y.tab.c analizadorSintactico.y
-gcc -o az2023_parser y.tab.c main.c
-./az2023_parser < entrada.txt
