@@ -13,17 +13,18 @@ struct identificadorConValor {
 }; 
 
 struct identificadorConValor dictionary[100]; 
-
-int getValue(struct identificadorConValor* identifier);
+int getValue(char* identifier);
 void yyerror(const char *s);
 int yylex();
 int yywrap();
 
-%}
+%} 
 
-%token <cadena> CADENA
-%token <variable> ID
-%token <valor> CONST 
+%left '+' '-'
+%left '*' '/' 
+
+%token <cadena> CADENA ID
+%token <valor> CONST
 %token INICIO FIN SI ENTONCES LEER ESCRIBIR ASIGNACION PD PI
 
 %union {
@@ -32,7 +33,9 @@ int yywrap();
   struct identificadorConValor* variable;
 };
 
-%type <valor> exp
+%type <valor> exp cond
+%type <valor> instruccion 
+%type <valor> inst_si inst_asign inst_leer inst_escribir
 
 %%
 
@@ -63,46 +66,51 @@ inst_escribir : ESCRIBIR PI ID PD {
 inst_leer : LEER PI ID PD { 
     scanf("%d", &valor_leido);
     struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
-    var->nombre = $3;
+    var->nombre = $3; 
     var->valor = valor_leido;
     dictionary[tamaño++] = *var;
-  }
-  ;
+}
+;
 
-inst_si: SI cond ENTONCES instruccion
-  ;
-
-inst_asign: ID ASIGNACION exp {
-      int found = 0;
-      for (int i = 0; i < tamaño; i++) {
-        if (strcmp(dictionary[i].nombre, $1) == 0) {
-          dictionary[i].valor = $3;
-          found = 1;
-          break;
-        }
-      }
-      if (!found) {
-        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
-        var->nombre = $1;
-        var->valor = $3;
-        dictionary[tamaño++] = *var;
+inst_si: SI cond ENTONCES instruccion {
+      if ($2) {
+        $$ = $4;
+      } else {
+        $$ = 0;  
       }
     }
   ;
+
+inst_asign: ID ASIGNACION exp {
+    int found = 0;
+    for (int i = 0; i < tamaño; i++) {
+        if (strcmp(dictionary[i].nombre, $1) == 0) {
+            dictionary[i].valor = $3;
+            found = 1;
+            break;
+        }
+    }
+    if (!found) {
+        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+        var->nombre = $1; 
+        var->valor = $3;
+        dictionary[tamaño++] = *var; 
+    }
+} 
+;
+
+cond : exp '<' exp {$$ = $1 < $3;}
+    | exp '>' exp {$$ = $1 > $3;}
+    | exp '=' exp {$$ = $1 == $3;}
   ;
 
-cond : exp '<' exp
-    | exp '>' exp
-    | exp '=' exp
-  ;
-
-exp : exp '+' exp {$$ = $1 + $3;}
-    | exp '*' exp {$$ = $1 * $3;}
-    | exp '-' exp {$$ = $1 - $3;}
+exp : exp '*' exp {$$ = $1 * $3;}
     | exp '/' exp {$$ = $1 / $3;}
+    | exp '+' exp {$$ = $1 + $3;}
+    | exp '-' exp {$$ = $1 - $3;}
     | ID {$$ = getValue($1);}
     | CONST {$$ = $1;}
-  ;
+    ;
 
 %%
 
@@ -111,7 +119,7 @@ int main() {
     return 0;
 }
 
-int getValue(struct identificadorConValor* identifier) {
+int getValue(char* identifier) {
     for (int i = 0; i < tamaño; i++) {
         if (strcmp(dictionary[i].nombre, identifier) == 0) {
             return dictionary[i].valor;

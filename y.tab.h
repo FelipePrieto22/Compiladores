@@ -91,7 +91,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "analizadorSintactico.y"
+#line 30 "analizadorSintactico.y"
 
   int valor;
   char* cadena;

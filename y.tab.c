@@ -83,14 +83,13 @@ struct identificadorConValor {
 }; 
 
 struct identificadorConValor dictionary[100]; 
-
-int getValue(struct identificadorConValor* identifier);
+int getValue(char* identifier);
 void yyerror(const char *s);
 int yylex();
 int yywrap();
 
 
-#line 94 "y.tab.c"
+#line 93 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -171,13 +170,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "analizadorSintactico.y"
+#line 30 "analizadorSintactico.y"
 
   int valor;
   char* cadena;
   struct identificadorConValor* variable;
 
-#line 181 "y.tab.c"
+#line 180 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -200,25 +199,25 @@ enum yysymbol_kind_t
   YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
-  YYSYMBOL_CADENA = 3,                     /* CADENA  */
-  YYSYMBOL_ID = 4,                         /* ID  */
-  YYSYMBOL_CONST = 5,                      /* CONST  */
-  YYSYMBOL_INICIO = 6,                     /* INICIO  */
-  YYSYMBOL_FIN = 7,                        /* FIN  */
-  YYSYMBOL_SI = 8,                         /* SI  */
-  YYSYMBOL_ENTONCES = 9,                   /* ENTONCES  */
-  YYSYMBOL_LEER = 10,                      /* LEER  */
-  YYSYMBOL_ESCRIBIR = 11,                  /* ESCRIBIR  */
-  YYSYMBOL_ASIGNACION = 12,                /* ASIGNACION  */
-  YYSYMBOL_PD = 13,                        /* PD  */
-  YYSYMBOL_PI = 14,                        /* PI  */
-  YYSYMBOL_15_ = 15,                       /* '<'  */
-  YYSYMBOL_16_ = 16,                       /* '>'  */
-  YYSYMBOL_17_ = 17,                       /* '='  */
-  YYSYMBOL_18_ = 18,                       /* '+'  */
-  YYSYMBOL_19_ = 19,                       /* '*'  */
-  YYSYMBOL_20_ = 20,                       /* '-'  */
-  YYSYMBOL_21_ = 21,                       /* '/'  */
+  YYSYMBOL_3_ = 3,                         /* '+'  */
+  YYSYMBOL_4_ = 4,                         /* '-'  */
+  YYSYMBOL_5_ = 5,                         /* '*'  */
+  YYSYMBOL_6_ = 6,                         /* '/'  */
+  YYSYMBOL_CADENA = 7,                     /* CADENA  */
+  YYSYMBOL_ID = 8,                         /* ID  */
+  YYSYMBOL_CONST = 9,                      /* CONST  */
+  YYSYMBOL_INICIO = 10,                    /* INICIO  */
+  YYSYMBOL_FIN = 11,                       /* FIN  */
+  YYSYMBOL_SI = 12,                        /* SI  */
+  YYSYMBOL_ENTONCES = 13,                  /* ENTONCES  */
+  YYSYMBOL_LEER = 14,                      /* LEER  */
+  YYSYMBOL_ESCRIBIR = 15,                  /* ESCRIBIR  */
+  YYSYMBOL_ASIGNACION = 16,                /* ASIGNACION  */
+  YYSYMBOL_PD = 17,                        /* PD  */
+  YYSYMBOL_PI = 18,                        /* PI  */
+  YYSYMBOL_19_ = 19,                       /* '<'  */
+  YYSYMBOL_20_ = 20,                       /* '>'  */
+  YYSYMBOL_21_ = 21,                       /* '='  */
   YYSYMBOL_YYACCEPT = 22,                  /* $accept  */
   YYSYMBOL_prog = 23,                      /* prog  */
   YYSYMBOL_instrucciones = 24,             /* instrucciones  */
@@ -556,7 +555,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  13
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   39
+#define YYLAST   43
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  22
@@ -586,11 +585,9 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,    19,    18,     2,    20,     2,    21,     2,     2,
+       2,     2,     5,     3,     2,     4,     2,     6,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      15,    17,    16,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      19,    21,    20,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -607,17 +604,19 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13,    14
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     7,     8,
+       9,    10,    11,    12,    13,    14,    15,    16,    17,    18
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    39,    39,    44,    45,    48,    49,    50,    51,    54,
-      58,    63,    72,    75,    94,    95,    96,    99,   100,   101,
-     102,   103,   104
+       0,    42,    42,    47,    48,    51,    52,    53,    54,    57,
+      61,    66,    75,    85,   104,   105,   106,   109,   110,   111,
+     112,   113,   114
 };
 #endif
 
@@ -633,11 +632,11 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "CADENA", "ID",
-  "CONST", "INICIO", "FIN", "SI", "ENTONCES", "LEER", "ESCRIBIR",
-  "ASIGNACION", "PD", "PI", "'<'", "'>'", "'='", "'+'", "'*'", "'-'",
-  "'/'", "$accept", "prog", "instrucciones", "instruccion",
-  "inst_escribir", "inst_leer", "inst_si", "inst_asign", "cond", "exp", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "'+'", "'-'", "'*'",
+  "'/'", "CADENA", "ID", "CONST", "INICIO", "FIN", "SI", "ENTONCES",
+  "LEER", "ESCRIBIR", "ASIGNACION", "PD", "PI", "'<'", "'>'", "'='",
+  "$accept", "prog", "instrucciones", "instruccion", "inst_escribir",
+  "inst_leer", "inst_si", "inst_asign", "cond", "exp", YY_NULLPTR
 };
 
 static const char *
@@ -647,7 +646,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-15)
+#define YYPACT_NINF (-10)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -661,11 +660,11 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       0,    -3,     4,    17,    -2,    16,    18,    24,    -3,   -15,
-     -15,   -15,   -15,   -15,    -2,   -15,   -15,    25,     3,    29,
-       6,   -15,   -15,     7,    -3,    -2,    -2,    -2,    -2,    -2,
-      -2,    -2,    22,    23,    26,   -15,     7,     7,     7,     7,
-       7,     7,     7,   -15,   -15,   -15
+      -1,    -2,    11,    -9,    -4,    14,    15,    24,    -2,   -10,
+     -10,   -10,   -10,   -10,    -4,   -10,   -10,    21,    -3,    28,
+       7,   -10,   -10,    23,    -2,    -4,    -4,    -4,    -4,    -4,
+      -4,    -4,    20,    22,    26,   -10,    25,    25,   -10,   -10,
+      23,    23,    23,   -10,   -10,   -10
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -676,14 +675,14 @@ static const yytype_int8 yydefact[] =
        0,     0,     0,     0,     0,     0,     0,     0,     4,     5,
        6,     7,     8,     1,     0,    21,    22,     0,     0,     0,
        0,     2,     3,    13,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    12,    14,    15,    16,    17,
-      18,    19,    20,    11,    10,     9
+       0,     0,     0,     0,     0,    12,    19,    20,    17,    18,
+      14,    15,    16,    11,    10,     9
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -15,   -15,    30,    13,   -15,   -15,   -15,   -15,   -15,   -14
+     -10,   -10,    30,    16,   -10,   -10,   -10,   -10,   -10,    -6
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -697,29 +696,31 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      23,     3,    15,    16,    13,     4,     1,     5,     6,    33,
-      34,    36,    37,    38,    39,    40,    41,    42,    25,    26,
-      27,    28,    29,    30,    31,    28,    29,    30,    31,    14,
-      19,    21,    20,    32,    24,    43,    44,    35,    22,    45
+      25,    26,    27,    28,    15,    16,     3,    14,    23,     1,
+       4,    13,     5,     6,    33,    34,    29,    30,    31,    36,
+      37,    38,    39,    40,    41,    42,    25,    26,    27,    28,
+      27,    28,    19,    20,    24,    21,    32,    43,    22,    44,
+      35,     0,     0,    45
 };
 
 static const yytype_int8 yycheck[] =
 {
-      14,     4,     4,     5,     0,     8,     6,    10,    11,     3,
-       4,    25,    26,    27,    28,    29,    30,    31,    15,    16,
-      17,    18,    19,    20,    21,    18,    19,    20,    21,    12,
-      14,     7,    14,     4,     9,    13,    13,    24,     8,    13
+       3,     4,     5,     6,     8,     9,     8,    16,    14,    10,
+      12,     0,    14,    15,     7,     8,    19,    20,    21,    25,
+      26,    27,    28,    29,    30,    31,     3,     4,     5,     6,
+       5,     6,    18,    18,    13,    11,     8,    17,     8,    17,
+      24,    -1,    -1,    17
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     6,    23,     4,     8,    10,    11,    24,    25,    26,
-      27,    28,    29,     0,    12,     4,     5,    30,    31,    14,
-      14,     7,    24,    31,     9,    15,    16,    17,    18,    19,
-      20,    21,     4,     3,     4,    25,    31,    31,    31,    31,
-      31,    31,    31,    13,    13,    13
+       0,    10,    23,     8,    12,    14,    15,    24,    25,    26,
+      27,    28,    29,     0,    16,     8,     9,    30,    31,    18,
+      18,    11,    24,    31,    13,     3,     4,     5,     6,    19,
+      20,    21,     8,     7,     8,    25,    31,    31,    31,    31,
+      31,    31,    31,    17,    17,    17
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -1199,102 +1200,133 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* prog: INICIO instrucciones FIN  */
-#line 39 "analizadorSintactico.y"
+#line 42 "analizadorSintactico.y"
                                {
   printf("El programa ha sido analizado exitosamente.\n");
   exit(0);
 }
-#line 1208 "y.tab.c"
+#line 1209 "y.tab.c"
     break;
 
   case 9: /* inst_escribir: ESCRIBIR PI ID PD  */
-#line 54 "analizadorSintactico.y"
+#line 57 "analizadorSintactico.y"
                                   {
-    int value = getValue((yyvsp[-1].variable));
+    int value = getValue((yyvsp[-1].cadena));
     printf("\t %d\n", value);
   }
-#line 1217 "y.tab.c"
+#line 1218 "y.tab.c"
     break;
 
   case 10: /* inst_escribir: ESCRIBIR PI CADENA PD  */
-#line 58 "analizadorSintactico.y"
+#line 61 "analizadorSintactico.y"
                             {
       printf("\t %s\n", (yyvsp[-1].cadena)); 
   }
-#line 1225 "y.tab.c"
+#line 1226 "y.tab.c"
     break;
 
   case 11: /* inst_leer: LEER PI ID PD  */
-#line 63 "analizadorSintactico.y"
+#line 66 "analizadorSintactico.y"
                           { 
     scanf("%d", &valor_leido);
     struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
-    var->nombre = (yyvsp[-1].variable);
+    var->nombre = (yyvsp[-1].cadena); 
     var->valor = valor_leido;
     dictionary[tamaño++] = *var;
+}
+#line 1238 "y.tab.c"
+    break;
+
+  case 12: /* inst_si: SI cond ENTONCES instruccion  */
+#line 75 "analizadorSintactico.y"
+                                      {
+  if ((yyvsp[-2].valor)) {
+    (yyval.valor) = (yyvsp[0].valor);
+  } else {
+    (yyval.valor) = 0;
+    return; // Exit the current instruction if the condition is false
   }
-#line 1237 "y.tab.c"
+}
+#line 1251 "y.tab.c"
     break;
 
   case 13: /* inst_asign: ID ASIGNACION exp  */
-#line 75 "analizadorSintactico.y"
+#line 85 "analizadorSintactico.y"
                               {
-      int found = 0;
-      for (int i = 0; i < tamaño; i++) {
-        if (strcmp(dictionary[i].nombre, (yyvsp[-2].variable)) == 0) {
-          dictionary[i].valor = (yyvsp[0].valor);
-          found = 1;
-          break;
+    int found = 0;
+    for (int i = 0; i < tamaño; i++) {
+        if (strcmp(dictionary[i].nombre, (yyvsp[-2].cadena)) == 0) {
+            dictionary[i].valor = (yyvsp[0].valor);
+            found = 1;
+            break;
         }
-      }
-      if (!found) {
-        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
-        var->nombre = (yyvsp[-2].variable);
-        var->valor = (yyvsp[0].valor);
-        dictionary[tamaño++] = *var;
-      }
     }
-#line 1258 "y.tab.c"
+    if (!found) {
+        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+        var->nombre = (yyvsp[-2].cadena); 
+        var->valor = (yyvsp[0].valor);
+        dictionary[tamaño++] = *var; 
+    }
+}
+#line 1272 "y.tab.c"
     break;
 
-  case 17: /* exp: exp '+' exp  */
-#line 99 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) + (yyvsp[0].valor);}
-#line 1264 "y.tab.c"
+  case 14: /* cond: exp '<' exp  */
+#line 104 "analizadorSintactico.y"
+                   {(yyval.valor) = (yyvsp[-2].valor) < (yyvsp[0].valor);}
+#line 1278 "y.tab.c"
     break;
 
-  case 18: /* exp: exp '*' exp  */
-#line 100 "analizadorSintactico.y"
+  case 15: /* cond: exp '>' exp  */
+#line 105 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) > (yyvsp[0].valor);}
+#line 1284 "y.tab.c"
+    break;
+
+  case 16: /* cond: exp '=' exp  */
+#line 106 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) == (yyvsp[0].valor);}
+#line 1290 "y.tab.c"
+    break;
+
+  case 17: /* exp: exp '*' exp  */
+#line 109 "analizadorSintactico.y"
                   {(yyval.valor) = (yyvsp[-2].valor) * (yyvsp[0].valor);}
-#line 1270 "y.tab.c"
+#line 1296 "y.tab.c"
     break;
 
-  case 19: /* exp: exp '-' exp  */
-#line 101 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) - (yyvsp[0].valor);}
-#line 1276 "y.tab.c"
-    break;
-
-  case 20: /* exp: exp '/' exp  */
-#line 102 "analizadorSintactico.y"
+  case 18: /* exp: exp '/' exp  */
+#line 110 "analizadorSintactico.y"
                   {(yyval.valor) = (yyvsp[-2].valor) / (yyvsp[0].valor);}
-#line 1282 "y.tab.c"
+#line 1302 "y.tab.c"
+    break;
+
+  case 19: /* exp: exp '+' exp  */
+#line 111 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) + (yyvsp[0].valor);}
+#line 1308 "y.tab.c"
+    break;
+
+  case 20: /* exp: exp '-' exp  */
+#line 112 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) - (yyvsp[0].valor);}
+#line 1314 "y.tab.c"
     break;
 
   case 21: /* exp: ID  */
-#line 103 "analizadorSintactico.y"
-         {(yyval.valor) = getValue((yyvsp[0].variable));}
-#line 1288 "y.tab.c"
+#line 113 "analizadorSintactico.y"
+         {(yyval.valor) = getValue((yyvsp[0].cadena));}
+#line 1320 "y.tab.c"
     break;
 
   case 22: /* exp: CONST  */
-#line 104 "analizadorSintactico.y"
+#line 114 "analizadorSintactico.y"
             {(yyval.valor) = (yyvsp[0].valor);}
-#line 1294 "y.tab.c"
+#line 1326 "y.tab.c"
     break;
 
 
-#line 1298 "y.tab.c"
+#line 1330 "y.tab.c"
 
       default: break;
     }
@@ -1487,7 +1519,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 107 "analizadorSintactico.y"
+#line 118 "analizadorSintactico.y"
 
 
 int main() { 
@@ -1495,7 +1527,7 @@ int main() {
     return 0;
 }
 
-int getValue(struct identificadorConValor* identifier) {
+int getValue(char* identifier) {
     for (int i = 0; i < tamaño; i++) {
         if (strcmp(dictionary[i].nombre, identifier) == 0) {
             return dictionary[i].valor;
