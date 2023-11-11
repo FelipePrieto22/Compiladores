@@ -1420,7 +1420,7 @@ yyreturnlab:
 #line 73 "analizadorSintactico.y"
 
 
-int main() {
+int main() { 
     yyparse();
     return 0;
 }
