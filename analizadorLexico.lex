@@ -20,6 +20,7 @@ int yywrap();
 "escribir" { return ESCRIBIR; }
 ":=" { return ASIGNACION; } 
 [ \t\n] ;
+[-+*/=] {return yytext[0];}
 "(" { return PI; }
 ")" { return PD; }
 . { yyerror("Carácter ilegal"); }

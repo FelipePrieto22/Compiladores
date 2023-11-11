@@ -30,7 +30,9 @@ int yywrap();
   int valor;
   char* cadena;
   struct identificadorConValor* variable;
-}
+};
+
+%type <valor> exp
 
 %%
 
@@ -45,22 +47,18 @@ instrucciones: instruccion instrucciones
 
 instruccion: inst_escribir
     | inst_leer
-    | ID ASIGNACION CONST {
-
-      struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
-      var->nombre = $1->nombre;
-      var->valor = $3;
-      dictionary[tamaño++] = *var;
-    }
+    | inst_si
+    | inst_asign
   ;
 
 inst_escribir : ESCRIBIR PI ID PD {
-  int value = getValue($3);
-  printf("\t %d\n", value);
-}
+    int value = getValue($3);
+    printf("\t %d\n", value);
+  }
     | ESCRIBIR PI CADENA PD {
-    printf("\t %s\n", $3); 
-}
+      printf("\t %s\n", $3); 
+  }
+  ;
 
 inst_leer : LEER PI ID PD { 
     scanf("%d", &valor_leido);
@@ -68,7 +66,43 @@ inst_leer : LEER PI ID PD {
     var->nombre = $3;
     var->valor = valor_leido;
     dictionary[tamaño++] = *var;
-}
+  }
+  ;
+
+inst_si: SI cond ENTONCES instruccion
+  ;
+
+inst_asign: ID ASIGNACION exp {
+      int found = 0;
+      for (int i = 0; i < tamaño; i++) {
+        if (strcmp(dictionary[i].nombre, $1) == 0) {
+          dictionary[i].valor = $3;
+          found = 1;
+          break;
+        }
+      }
+      if (!found) {
+        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+        var->nombre = $1;
+        var->valor = $3;
+        dictionary[tamaño++] = *var;
+      }
+    }
+  ;
+  ;
+
+cond : exp '<' exp
+    | exp '>' exp
+    | exp '=' exp
+  ;
+
+exp : exp '+' exp {$$ = $1 + $3;}
+    | exp '*' exp {$$ = $1 * $3;}
+    | exp '-' exp {$$ = $1 - $3;}
+    | exp '/' exp {$$ = $1 / $3;}
+    | ID {$$ = getValue($1);}
+    | CONST {$$ = $1;}
+  ;
 
 %%
 
