@@ -7,4 +7,4 @@ EJECUCION DE CODIGO:
 
 lex analizador.l
 yacc -d analizadorSintactico.y
-gcc lex.yy.c y.tab.c -lfl
+gcc -o tarea lex.yy.c y.tab.c -lfl

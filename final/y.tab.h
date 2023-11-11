@@ -56,13 +56,13 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     CADENA = 258,                  /* CADENA  */
     ID = 259,                      /* ID  */
-    INICIO = 260,                  /* INICIO  */
-    FIN = 261,                     /* FIN  */
-    SI = 262,                      /* SI  */
-    ENTONCES = 263,                /* ENTONCES  */
-    LEER = 264,                    /* LEER  */
-    ESCRIBIR = 265,                /* ESCRIBIR  */
-    CONST = 266,                   /* CONST  */
+    CONST = 260,                   /* CONST  */
+    INICIO = 261,                  /* INICIO  */
+    FIN = 262,                     /* FIN  */
+    SI = 263,                      /* SI  */
+    ENTONCES = 264,                /* ENTONCES  */
+    LEER = 265,                    /* LEER  */
+    ESCRIBIR = 266,                /* ESCRIBIR  */
     ASIGNACION = 267,              /* ASIGNACION  */
     PD = 268,                      /* PD  */
     PI = 269                       /* PI  */
@@ -76,13 +76,13 @@ extern int yydebug;
 #define YYUNDEF 257
 #define CADENA 258
 #define ID 259
-#define INICIO 260
-#define FIN 261
-#define SI 262
-#define ENTONCES 263
-#define LEER 264
-#define ESCRIBIR 265
-#define CONST 266
+#define CONST 260
+#define INICIO 261
+#define FIN 262
+#define SI 263
+#define ENTONCES 264
+#define LEER 265
+#define ESCRIBIR 266
 #define ASIGNACION 267
 #define PD 268
 #define PI 269
@@ -91,12 +91,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "analizadorSintactico.y"
+#line 29 "analizadorSintactico.y"
 
-  char* cadena;
   int valor;
+  char* cadena;
+  struct identificadorConValor* variable;
 
-#line 100 "y.tab.h"
+#line 101 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

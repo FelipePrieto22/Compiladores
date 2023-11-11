@@ -24,7 +24,6 @@ int yywrap();
 ")" { return PD; }
 . { yyerror("Carácter ilegal"); }
 
-
 %%
 
 void yyerror(const char* s) {

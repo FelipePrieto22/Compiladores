@@ -68,16 +68,29 @@
 
 /* First part of user prologue.  */
 #line 1 "analizadorSintactico.y"
- 
-#include <stdio.h> 
+
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+int tamaño = 0;
+int valor_leido;
+char* cadena_leida;
+
+struct identificadorConValor {
+  char* nombre;
+  int valor;
+}; 
+
+struct identificadorConValor dictionary[100]; 
+
+int getValue(struct identificadorConValor* identifier);
 void yyerror(const char *s);
 int yylex();
 int yywrap();
 
-int valor_leido;
 
-#line 81 "y.tab.c"
+#line 94 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -123,13 +136,13 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     CADENA = 258,                  /* CADENA  */
     ID = 259,                      /* ID  */
-    INICIO = 260,                  /* INICIO  */
-    FIN = 261,                     /* FIN  */
-    SI = 262,                      /* SI  */
-    ENTONCES = 263,                /* ENTONCES  */
-    LEER = 264,                    /* LEER  */
-    ESCRIBIR = 265,                /* ESCRIBIR  */
-    CONST = 266,                   /* CONST  */
+    CONST = 260,                   /* CONST  */
+    INICIO = 261,                  /* INICIO  */
+    FIN = 262,                     /* FIN  */
+    SI = 263,                      /* SI  */
+    ENTONCES = 264,                /* ENTONCES  */
+    LEER = 265,                    /* LEER  */
+    ESCRIBIR = 266,                /* ESCRIBIR  */
     ASIGNACION = 267,              /* ASIGNACION  */
     PD = 268,                      /* PD  */
     PI = 269                       /* PI  */
@@ -143,13 +156,13 @@ extern int yydebug;
 #define YYUNDEF 257
 #define CADENA 258
 #define ID 259
-#define INICIO 260
-#define FIN 261
-#define SI 262
-#define ENTONCES 263
-#define LEER 264
-#define ESCRIBIR 265
-#define CONST 266
+#define CONST 260
+#define INICIO 261
+#define FIN 262
+#define SI 263
+#define ENTONCES 264
+#define LEER 265
+#define ESCRIBIR 266
 #define ASIGNACION 267
 #define PD 268
 #define PI 269
@@ -158,12 +171,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "analizadorSintactico.y"
+#line 29 "analizadorSintactico.y"
 
-  char* cadena;
   int valor;
+  char* cadena;
+  struct identificadorConValor* variable;
 
-#line 167 "y.tab.c"
+#line 181 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -188,13 +202,13 @@ enum yysymbol_kind_t
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_CADENA = 3,                     /* CADENA  */
   YYSYMBOL_ID = 4,                         /* ID  */
-  YYSYMBOL_INICIO = 5,                     /* INICIO  */
-  YYSYMBOL_FIN = 6,                        /* FIN  */
-  YYSYMBOL_SI = 7,                         /* SI  */
-  YYSYMBOL_ENTONCES = 8,                   /* ENTONCES  */
-  YYSYMBOL_LEER = 9,                       /* LEER  */
-  YYSYMBOL_ESCRIBIR = 10,                  /* ESCRIBIR  */
-  YYSYMBOL_CONST = 11,                     /* CONST  */
+  YYSYMBOL_CONST = 5,                      /* CONST  */
+  YYSYMBOL_INICIO = 6,                     /* INICIO  */
+  YYSYMBOL_FIN = 7,                        /* FIN  */
+  YYSYMBOL_SI = 8,                         /* SI  */
+  YYSYMBOL_ENTONCES = 9,                   /* ENTONCES  */
+  YYSYMBOL_LEER = 10,                      /* LEER  */
+  YYSYMBOL_ESCRIBIR = 11,                  /* ESCRIBIR  */
   YYSYMBOL_ASIGNACION = 12,                /* ASIGNACION  */
   YYSYMBOL_PD = 13,                        /* PD  */
   YYSYMBOL_PI = 14,                        /* PI  */
@@ -529,18 +543,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  9
+#define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   13
+#define YYLAST   16
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  8
+#define YYNRULES  10
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  18
+#define YYNSTATES  23
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   269
@@ -590,7 +604,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    21,    21,    26,    27,    30,    31,    34,    38
+       0,    37,    37,    42,    43,    46,    47,    48,    57,    61,
+      65
 };
 #endif
 
@@ -607,7 +622,7 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "CADENA", "ID",
-  "INICIO", "FIN", "SI", "ENTONCES", "LEER", "ESCRIBIR", "CONST",
+  "CONST", "INICIO", "FIN", "SI", "ENTONCES", "LEER", "ESCRIBIR",
   "ASIGNACION", "PD", "PI", "$accept", "prog", "instrucciones",
   "instruccion", "inst_escribir", "inst_leer", YY_NULLPTR
 };
@@ -619,7 +634,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-11)
+#define YYPACT_NINF (-8)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -633,8 +648,9 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -9,     3,   -10,    -8,    -1,    -9,   -11,   -11,   -11,
-       4,     6,   -11,   -11,    -6,    -2,   -11,   -11
+      -3,    -4,     4,    -7,    -6,    -5,     3,    -4,    -8,    -8,
+      -8,     6,     8,    -2,    -8,    -8,    -8,     0,     1,     2,
+      -8,    -8,    -8
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -642,20 +658,21 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     4,     5,     6,     1,
-       0,     0,     2,     3,     0,     0,     8,     7
+       0,     0,     0,     0,     0,     0,     0,     4,     5,     6,
+       1,     0,     0,     0,     2,     3,     7,     0,     0,     0,
+      10,     9,     8
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,   -11,     7,   -11,   -11,   -11
+      -8,    -8,     9,    -8,    -8,    -8
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     5,     6,     7,     8
+       0,     2,     6,     7,     8,     9
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -663,34 +680,37 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       3,     4,     1,     9,    10,    12,    11,    16,    14,    15,
-       0,    17,     0,    13
+       3,    18,    19,     1,    10,    11,     4,     5,    12,    13,
+      14,    16,    17,    20,    21,    22,    15
 };
 
 static const yytype_int8 yycheck[] =
 {
-       9,    10,     5,     0,    14,     6,    14,    13,     4,     3,
-      -1,    13,    -1,     6
+       4,     3,     4,     6,     0,    12,    10,    11,    14,    14,
+       7,     5,     4,    13,    13,    13,     7
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     5,    16,     9,    10,    17,    18,    19,    20,     0,
-      14,    14,     6,    17,     4,     3,    13,    13
+       0,     6,    16,     4,    10,    11,    17,    18,    19,    20,
+       0,    12,    14,    14,     7,    17,     5,     4,     3,     4,
+      13,    13,    13
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    15,    16,    17,    17,    18,    18,    19,    20
+       0,    15,    16,    17,    17,    18,    18,    18,    19,    19,
+      20
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     2,     1,     1,     1,     4,     4
+       0,     2,     3,     2,     1,     1,     1,     3,     4,     4,
+       4
 };
 
 
@@ -1154,35 +1174,57 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* prog: INICIO instrucciones FIN  */
-#line 21 "analizadorSintactico.y"
+#line 37 "analizadorSintactico.y"
                                {
   printf("El programa ha sido analizado exitosamente.\n");
   exit(0);
 }
-#line 1163 "y.tab.c"
+#line 1183 "y.tab.c"
     break;
 
-  case 7: /* inst_escribir: ESCRIBIR PI CADENA PD  */
-#line 34 "analizadorSintactico.y"
-                                      {
+  case 7: /* instruccion: ID ASIGNACION CONST  */
+#line 48 "analizadorSintactico.y"
+                          {
+
+      struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+      var->nombre = (yyvsp[-2].variable)->nombre;
+      var->valor = (yyvsp[0].valor);
+      dictionary[tamaño++] = *var;
+    }
+#line 1195 "y.tab.c"
+    break;
+
+  case 8: /* inst_escribir: ESCRIBIR PI ID PD  */
+#line 57 "analizadorSintactico.y"
+                                  {
+  int value = getValue((yyvsp[-1].variable));
+  printf("\t %d\n", value);
+}
+#line 1204 "y.tab.c"
+    break;
+
+  case 9: /* inst_escribir: ESCRIBIR PI CADENA PD  */
+#line 61 "analizadorSintactico.y"
+                            {
     printf("\t %s\n", (yyvsp[-1].cadena)); 
 }
-#line 1171 "y.tab.c"
+#line 1212 "y.tab.c"
     break;
 
-  case 8: /* inst_leer: LEER PI ID PD  */
-#line 38 "analizadorSintactico.y"
+  case 10: /* inst_leer: LEER PI ID PD  */
+#line 65 "analizadorSintactico.y"
                           { 
-   
     scanf("%d", &valor_leido);
-    printf("\nInstrucción leer: %s\n", valor_leido); 
-
+    struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+    var->nombre = (yyvsp[-1].variable);
+    var->valor = valor_leido;
+    dictionary[tamaño++] = *var;
 }
-#line 1182 "y.tab.c"
+#line 1224 "y.tab.c"
     break;
 
 
-#line 1186 "y.tab.c"
+#line 1228 "y.tab.c"
 
       default: break;
     }
@@ -1375,9 +1417,19 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 46 "analizadorSintactico.y"
+#line 73 "analizadorSintactico.y"
 
 
 int main() {
     yyparse();
+    return 0;
+}
+
+int getValue(struct identificadorConValor* identifier) {
+    for (int i = 0; i < tamaño; i++) {
+        if (strcmp(dictionary[i].nombre, identifier) == 0) {
+            return dictionary[i].valor;
+        }
+    } 
+    return 0;
 }
