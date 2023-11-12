@@ -5,14 +5,15 @@
 
 int tamaño = 0;
 int valor_leido;
+int condicional = 1;
 char* cadena_leida;
 
-struct identificadorConValor {
+struct tablaDeSimbolos {
   char* nombre;
   int valor;
 }; 
 
-struct identificadorConValor dictionary[100]; 
+struct tablaDeSimbolos dictionary[100]; 
 int getValue(char* identifier);
 void yyerror(const char *s);
 int yylex();
@@ -30,12 +31,11 @@ int yywrap();
 %union {
   int valor;
   char* cadena;
-  struct identificadorConValor* variable;
+  struct tablaDeSimbolos* variable;
 };
 
 %type <valor> exp cond
-%type <valor> instruccion 
-%type <valor> inst_si inst_asign inst_leer inst_escribir
+%type <valor> instruccion inst_si inst_asign inst_leer inst_escribir
 
 %%
 
@@ -48,38 +48,50 @@ instrucciones: instruccion instrucciones
     | instruccion
   ;
 
-instruccion: inst_escribir
+instruccion: inst_si 
+    | inst_escribir
     | inst_leer
-    | inst_si
     | inst_asign
   ;
 
 inst_escribir : ESCRIBIR PI ID PD {
-    int value = getValue($3);
-    printf("\t %d\n", value);
+    if(condicional){
+      int value = getValue($3);
+      printf("\t %d\n", value);
+      condicional = 1;
+    }
+    
   }
     | ESCRIBIR PI CADENA PD {
-      printf("\t %s\n", $3); 
+      if(condicional){
+        printf("\t %s\n", $3); 
+        condicional = 1;
+      }
+      
   }
   ;
 
 inst_leer : LEER PI ID PD { 
+  if(condicional){
     scanf("%d", &valor_leido);
-    struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+    struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
     var->nombre = $3; 
     var->valor = valor_leido;
     dictionary[tamaño++] = *var;
+  }
 }
 ;
 
 inst_si: SI cond ENTONCES instruccion {
       if ($2) {
         $$ = $4;
-      } else {
-        $$ = 0;  
+      }
+      else {
+        $$ = 0;
       }
     }
   ;
+
 
 inst_asign: ID ASIGNACION exp {
     int found = 0;
@@ -91,7 +103,7 @@ inst_asign: ID ASIGNACION exp {
         }
     }
     if (!found) {
-        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+        struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
         var->nombre = $1; 
         var->valor = $3;
         dictionary[tamaño++] = *var; 
@@ -99,9 +111,9 @@ inst_asign: ID ASIGNACION exp {
 } 
 ;
 
-cond : exp '<' exp {$$ = $1 < $3;}
-    | exp '>' exp {$$ = $1 > $3;}
-    | exp '=' exp {$$ = $1 == $3;}
+cond : exp '<' exp {condicional = $1 < $3;}
+    | exp '>' exp {condicional = $1 > $3;}
+    | exp '=' exp {condicional = $1 == $3;}
   ;
 
 exp : exp '*' exp {$$ = $1 * $3;}
@@ -112,9 +124,11 @@ exp : exp '*' exp {$$ = $1 * $3;}
     | CONST {$$ = $1;}
     ;
 
+
 %%
 
 int main() { 
+    printf("Manual de usuario: \n");
     yyparse();
     return 0;
 }

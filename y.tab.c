@@ -75,21 +75,22 @@
 
 int tamaño = 0;
 int valor_leido;
+int condicional = 1;
 char* cadena_leida;
 
-struct identificadorConValor {
+struct tablaDeSimbolos {
   char* nombre;
   int valor;
 }; 
 
-struct identificadorConValor dictionary[100]; 
+struct tablaDeSimbolos dictionary[100]; 
 int getValue(char* identifier);
 void yyerror(const char *s);
 int yylex();
 int yywrap();
 
 
-#line 93 "y.tab.c"
+#line 94 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -170,13 +171,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 30 "analizadorSintactico.y"
+#line 31 "analizadorSintactico.y"
 
   int valor;
   char* cadena;
-  struct identificadorConValor* variable;
+  struct tablaDeSimbolos* variable;
 
-#line 180 "y.tab.c"
+#line 181 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -615,8 +616,8 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int8 yyrline[] =
 {
        0,    42,    42,    47,    48,    51,    52,    53,    54,    57,
-      61,    66,    75,    85,   104,   105,   106,   109,   110,   111,
-     112,   113,   114
+      65,    74,    85,    96,   114,   115,   116,   119,   120,   121,
+     122,   123,   124
 };
 #endif
 
@@ -672,8 +673,8 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,     0,     4,     5,
-       6,     7,     8,     1,     0,    21,    22,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     4,     6,
+       7,     5,     8,     1,     0,    21,    22,     0,     0,     0,
        0,     2,     3,    13,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,    12,    19,    20,    17,    18,
       14,    15,    16,    11,    10,     9
@@ -1205,53 +1206,63 @@ yyreduce:
   printf("El programa ha sido analizado exitosamente.\n");
   exit(0);
 }
-#line 1209 "y.tab.c"
+#line 1210 "y.tab.c"
     break;
 
   case 9: /* inst_escribir: ESCRIBIR PI ID PD  */
 #line 57 "analizadorSintactico.y"
                                   {
-    int value = getValue((yyvsp[-1].cadena));
-    printf("\t %d\n", value);
+    if(condicional){
+      int value = getValue((yyvsp[-1].cadena));
+      printf("\t %d\n", value);
+      condicional = 1;
+    }
+    
   }
-#line 1218 "y.tab.c"
+#line 1223 "y.tab.c"
     break;
 
   case 10: /* inst_escribir: ESCRIBIR PI CADENA PD  */
-#line 61 "analizadorSintactico.y"
+#line 65 "analizadorSintactico.y"
                             {
-      printf("\t %s\n", (yyvsp[-1].cadena)); 
+      if(condicional){
+        printf("\t %s\n", (yyvsp[-1].cadena)); 
+        condicional = 1;
+      }
+      
   }
-#line 1226 "y.tab.c"
+#line 1235 "y.tab.c"
     break;
 
   case 11: /* inst_leer: LEER PI ID PD  */
-#line 66 "analizadorSintactico.y"
+#line 74 "analizadorSintactico.y"
                           { 
+  if(condicional){
     scanf("%d", &valor_leido);
-    struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+    struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
     var->nombre = (yyvsp[-1].cadena); 
     var->valor = valor_leido;
     dictionary[tamaño++] = *var;
+  }
 }
-#line 1238 "y.tab.c"
+#line 1249 "y.tab.c"
     break;
 
   case 12: /* inst_si: SI cond ENTONCES instruccion  */
-#line 75 "analizadorSintactico.y"
+#line 85 "analizadorSintactico.y"
                                       {
-  if ((yyvsp[-2].valor)) {
-    (yyval.valor) = (yyvsp[0].valor);
-  } else {
-    (yyval.valor) = 0;
-    return; // Exit the current instruction if the condition is false
-  }
-}
-#line 1251 "y.tab.c"
+      if ((yyvsp[-2].valor)) {
+        (yyval.valor) = (yyvsp[0].valor);
+      }
+      else {
+        (yyval.valor) = 0;
+      }
+    }
+#line 1262 "y.tab.c"
     break;
 
   case 13: /* inst_asign: ID ASIGNACION exp  */
-#line 85 "analizadorSintactico.y"
+#line 96 "analizadorSintactico.y"
                               {
     int found = 0;
     for (int i = 0; i < tamaño; i++) {
@@ -1262,71 +1273,71 @@ yyreduce:
         }
     }
     if (!found) {
-        struct identificadorConValor* var = malloc(sizeof(struct identificadorConValor));
+        struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
         var->nombre = (yyvsp[-2].cadena); 
         var->valor = (yyvsp[0].valor);
         dictionary[tamaño++] = *var; 
     }
 }
-#line 1272 "y.tab.c"
+#line 1283 "y.tab.c"
     break;
 
   case 14: /* cond: exp '<' exp  */
-#line 104 "analizadorSintactico.y"
-                   {(yyval.valor) = (yyvsp[-2].valor) < (yyvsp[0].valor);}
-#line 1278 "y.tab.c"
+#line 114 "analizadorSintactico.y"
+                   {condicional = (yyvsp[-2].valor) < (yyvsp[0].valor);}
+#line 1289 "y.tab.c"
     break;
 
   case 15: /* cond: exp '>' exp  */
-#line 105 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) > (yyvsp[0].valor);}
-#line 1284 "y.tab.c"
+#line 115 "analizadorSintactico.y"
+                  {condicional = (yyvsp[-2].valor) > (yyvsp[0].valor);}
+#line 1295 "y.tab.c"
     break;
 
   case 16: /* cond: exp '=' exp  */
-#line 106 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) == (yyvsp[0].valor);}
-#line 1290 "y.tab.c"
+#line 116 "analizadorSintactico.y"
+                  {condicional = (yyvsp[-2].valor) == (yyvsp[0].valor);}
+#line 1301 "y.tab.c"
     break;
 
   case 17: /* exp: exp '*' exp  */
-#line 109 "analizadorSintactico.y"
+#line 119 "analizadorSintactico.y"
                   {(yyval.valor) = (yyvsp[-2].valor) * (yyvsp[0].valor);}
-#line 1296 "y.tab.c"
+#line 1307 "y.tab.c"
     break;
 
   case 18: /* exp: exp '/' exp  */
-#line 110 "analizadorSintactico.y"
+#line 120 "analizadorSintactico.y"
                   {(yyval.valor) = (yyvsp[-2].valor) / (yyvsp[0].valor);}
-#line 1302 "y.tab.c"
+#line 1313 "y.tab.c"
     break;
 
   case 19: /* exp: exp '+' exp  */
-#line 111 "analizadorSintactico.y"
+#line 121 "analizadorSintactico.y"
                   {(yyval.valor) = (yyvsp[-2].valor) + (yyvsp[0].valor);}
-#line 1308 "y.tab.c"
+#line 1319 "y.tab.c"
     break;
 
   case 20: /* exp: exp '-' exp  */
-#line 112 "analizadorSintactico.y"
+#line 122 "analizadorSintactico.y"
                   {(yyval.valor) = (yyvsp[-2].valor) - (yyvsp[0].valor);}
-#line 1314 "y.tab.c"
+#line 1325 "y.tab.c"
     break;
 
   case 21: /* exp: ID  */
-#line 113 "analizadorSintactico.y"
+#line 123 "analizadorSintactico.y"
          {(yyval.valor) = getValue((yyvsp[0].cadena));}
-#line 1320 "y.tab.c"
+#line 1331 "y.tab.c"
     break;
 
   case 22: /* exp: CONST  */
-#line 114 "analizadorSintactico.y"
+#line 124 "analizadorSintactico.y"
             {(yyval.valor) = (yyvsp[0].valor);}
-#line 1326 "y.tab.c"
+#line 1337 "y.tab.c"
     break;
 
 
-#line 1330 "y.tab.c"
+#line 1341 "y.tab.c"
 
       default: break;
     }
@@ -1519,10 +1530,11 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 118 "analizadorSintactico.y"
+#line 128 "analizadorSintactico.y"
 
 
 int main() { 
+    printf("Manual de usuario: \n");
     yyparse();
     return 0;
 }

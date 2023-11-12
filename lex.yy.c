@@ -464,8 +464,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "analizadorLexico.lex"
-#line 2 "analizadorLexico.lex"
+#line 1 "analizadorLexico.l"
+#line 2 "analizadorLexico.l"
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
@@ -689,7 +689,7 @@ YY_DECL
 		}
 
 	{
-#line 9 "analizadorLexico.lex"
+#line 9 "analizadorLexico.l"
 
 
 #line 696 "lex.yy.c"
@@ -751,83 +751,83 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "analizadorLexico.lex"
+#line 11 "analizadorLexico.l"
 { yylval.valor = atoi(yytext); return CONST; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "analizadorLexico.lex"
+#line 12 "analizadorLexico.l"
 { yylval.cadena = strdup(yytext); return ID; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 14 "analizadorLexico.lex"
+#line 14 "analizadorLexico.l"
 { yylval.cadena = strdup(yytext + 1); yylval.cadena[strlen(yytext) - 2] = '\0'; return CADENA; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 15 "analizadorLexico.lex"
+#line 16 "analizadorLexico.l"
 { return INICIO; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "analizadorLexico.lex"
+#line 17 "analizadorLexico.l"
 { return FIN; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 17 "analizadorLexico.lex"
+#line 18 "analizadorLexico.l"
 { return SI; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 18 "analizadorLexico.lex"
+#line 19 "analizadorLexico.l"
 { return ENTONCES; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 19 "analizadorLexico.lex"
+#line 20 "analizadorLexico.l"
 { return LEER; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 20 "analizadorLexico.lex"
+#line 21 "analizadorLexico.l"
 { return ESCRIBIR; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 21 "analizadorLexico.lex"
+#line 22 "analizadorLexico.l"
 { return ASIGNACION; } 
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 22 "analizadorLexico.lex"
+#line 24 "analizadorLexico.l"
 ;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 23 "analizadorLexico.lex"
+#line 25 "analizadorLexico.l"
 {return yytext[0];}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 24 "analizadorLexico.lex"
+#line 26 "analizadorLexico.l"
 { return PI; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 25 "analizadorLexico.lex"
+#line 27 "analizadorLexico.l"
 { return PD; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 26 "analizadorLexico.lex"
+#line 28 "analizadorLexico.l"
 { yyerror("Carácter ilegal"); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 28 "analizadorLexico.lex"
+#line 30 "analizadorLexico.l"
 ECHO;
 	YY_BREAK
 #line 834 "lex.yy.c"
@@ -1835,7 +1835,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 28 "analizadorLexico.lex"
+#line 30 "analizadorLexico.l"
 
 
 void yyerror(const char* s) {

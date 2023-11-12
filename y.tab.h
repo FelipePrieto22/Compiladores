@@ -91,11 +91,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 30 "analizadorSintactico.y"
+#line 31 "analizadorSintactico.y"
 
   int valor;
   char* cadena;
-  struct identificadorConValor* variable;
+  struct tablaDeSimbolos* variable;
 
 #line 101 "y.tab.h"
 

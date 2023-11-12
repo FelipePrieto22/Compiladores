@@ -12,6 +12,7 @@ int yywrap();
 [A-Z][0-9] { yylval.cadena = strdup(yytext); return ID; }
 
 ["](.*)["]  { yylval.cadena = strdup(yytext + 1); yylval.cadena[strlen(yytext) - 2] = '\0'; return CADENA; }
+
 "inicio" { return INICIO; }
 "fin" { return FIN; }
 "si" { return SI; }
@@ -19,6 +20,7 @@ int yywrap();
 "leer" { return LEER; }
 "escribir" { return ESCRIBIR; }
 ":=" { return ASIGNACION; } 
+
 [ \t\n] ;
 [-+*/=<>] {return yytext[0];}
 "(" { return PI; }
