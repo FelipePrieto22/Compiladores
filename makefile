@@ -1,7 +1,7 @@
 all: tarea
 
 y.tab.c: analizadorSintactico.y
-	yacc -d analizadorSintactico.y
+	yacc -d -v analizadorSintactico.y
 
 lex.yy.c: analizadorLexico.l
 	lex analizadorLexico.l
