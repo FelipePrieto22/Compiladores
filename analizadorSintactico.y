@@ -42,7 +42,7 @@ int yywrap();
 
 prog: INICIO instrucciones FIN {
   printf("\nEl programa ha sido analizado exitosamente.\n");
-  printf("\nTabla de analisis sintactico:\nID\tValor\n");
+  printf("\nTabla de identificadores:\nID\tValor\n");
   for (int i = 0; i < tamaño; i++) {
     printf("%s \t%d \n",dictionary[i].nombre ,dictionary[i].valor);
   }
