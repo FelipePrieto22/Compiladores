@@ -39,8 +39,14 @@ int yywrap();
 
 %%
 
+
 prog: INICIO instrucciones FIN {
-  printf("El programa ha sido analizado exitosamente.\n");
+  printf("\nEl programa ha sido analizado exitosamente.\n");
+  printf("\nTabla de analisis sintactico:\nID\tValor\n");
+  for (int i = 0; i < tamaño; i++) {
+    printf("%s \t%d \n",dictionary[i].nombre ,dictionary[i].valor);
+  }
+  printf("\n");
   exit(0);
 }
 
@@ -58,49 +64,55 @@ inst_escribir : ESCRIBIR PI ID PD {
     if(condicional){
       int value = getValue($3);
       printf("\t %d\n", value);
-      condicional = 1;
     }
-    
   }
     | ESCRIBIR PI CADENA PD {
       if(condicional){
         printf("\t %s\n", $3); 
-        condicional = 1;
       }
-      
   }
   ;
 
 inst_leer : LEER PI ID PD { 
   if(condicional){
-    scanf("%d", &valor_leido);
-    struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
-    var->nombre = $3; 
-    var->valor = valor_leido;
-    dictionary[tamaño++] = *var;
+    int found = 0;
+    for (int i = 0; i < tamaño; i++) {
+      if (strcmp(dictionary[i].nombre, $3) == 0) {
+        scanf("%d", &valor_leido);
+        dictionary[i].valor = valor_leido;
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      scanf("%d", &valor_leido);
+      struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
+      var->nombre = $3; 
+      var->valor = valor_leido;
+      dictionary[tamaño++] = *var;
+    }    
   }
 }
 ;
 
 inst_si: SI cond ENTONCES instruccion {
-      if ($2) {
-        $$ = $4;
-      }
-      else {
-        $$ = 0;
-      }
+    if ($2) {
+      $$ = $4;
     }
+    if(!condicional){
+      condicional = 1;
+    }
+  }
   ;
-
 
 inst_asign: ID ASIGNACION exp {
     int found = 0;
     for (int i = 0; i < tamaño; i++) {
-        if (strcmp(dictionary[i].nombre, $1) == 0) {
-            dictionary[i].valor = $3;
-            found = 1;
-            break;
-        }
+      if (strcmp(dictionary[i].nombre, $1) == 0) {
+        dictionary[i].valor = $3;
+        found = 1;
+        break;
+      }
     }
     if (!found) {
         struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
@@ -127,10 +139,19 @@ exp : exp '*' exp {$$ = $1 * $3;}
 
 %%
 
-int main() { 
-    printf("Manual de usuario: \n");
-    yyparse();
-    return 0;
+int main() {
+  printf("Manual de usuario:\n\n");
+  printf("-Identificadores: son de la forma una letra mayuscula de la A a la Z seguida de un digito del 0 al 9\n\n");
+  printf("-Constrantes: son cualquier combinacion de digitos\n\n");
+  printf("INSTRUCCIONES:\n\n");
+  printf("-Asignacion: para asignar usa :=, por ejemplo A1 := 3, esto asigna a A1 el valor 3\n\n");
+  printf("-Escribir: puedes escribir en pantalla un identificador o cadena, por ejemplo escribir(\"Hola\") muestra Hola o tambien escribir(A1) muestra 3\n\n");
+  printf("-Leer: puedes utilizar leer para ingresar desde pantalla un valor y asignarlo al identificador, por ejemplo leer(A1) 35, esto asigna a A1 el valor 35 que se ingresa en el terminal\n\n");
+  printf("-Si: puedes realizar un si cond entonces instruccion, donde cond es una condicion usando <,> o = y instruccion son las mencionadas anteriormente, por ejemplo si 1 < 4 entonces escribir(\"hola\"), esto mostrara Hola en el terminal\n\n");
+  printf("--------------------------------------------------------------------------\n");
+  printf("Escribe tu programa a analizar:\n\n"); 
+  yyparse();
+  return 0;
 }
 
 int getValue(char* identifier) {

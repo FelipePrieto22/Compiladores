@@ -613,11 +613,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    42,    42,    47,    48,    51,    52,    53,    54,    57,
-      65,    74,    85,    96,   114,   115,   116,   119,   120,   121,
-     122,   123,   124
+       0,    43,    43,    53,    54,    57,    58,    59,    60,    63,
+      69,    76,    98,   108,   126,   127,   128,   131,   132,   133,
+     134,   135,   136
 };
 #endif
 
@@ -1201,76 +1201,88 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* prog: INICIO instrucciones FIN  */
-#line 42 "analizadorSintactico.y"
+#line 43 "analizadorSintactico.y"
                                {
-  printf("El programa ha sido analizado exitosamente.\n");
+  printf("\nEl programa ha sido analizado exitosamente.\n");
+  printf("\nTabla de analisis sintactico:\nID\tValor\n");
+  for (int i = 0; i < tamaño; i++) {
+    printf("%s \t%d \n",dictionary[i].nombre ,dictionary[i].valor);
+  }
+  printf("\n");
   exit(0);
 }
-#line 1210 "y.tab.c"
+#line 1215 "y.tab.c"
     break;
 
   case 9: /* inst_escribir: ESCRIBIR PI ID PD  */
-#line 57 "analizadorSintactico.y"
+#line 63 "analizadorSintactico.y"
                                   {
     if(condicional){
       int value = getValue((yyvsp[-1].cadena));
       printf("\t %d\n", value);
-      condicional = 1;
     }
-    
   }
-#line 1223 "y.tab.c"
+#line 1226 "y.tab.c"
     break;
 
   case 10: /* inst_escribir: ESCRIBIR PI CADENA PD  */
-#line 65 "analizadorSintactico.y"
+#line 69 "analizadorSintactico.y"
                             {
       if(condicional){
         printf("\t %s\n", (yyvsp[-1].cadena)); 
-        condicional = 1;
       }
-      
   }
-#line 1235 "y.tab.c"
+#line 1236 "y.tab.c"
     break;
 
   case 11: /* inst_leer: LEER PI ID PD  */
-#line 74 "analizadorSintactico.y"
+#line 76 "analizadorSintactico.y"
                           { 
   if(condicional){
-    scanf("%d", &valor_leido);
-    struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
-    var->nombre = (yyvsp[-1].cadena); 
-    var->valor = valor_leido;
-    dictionary[tamaño++] = *var;
+    int found = 0;
+    for (int i = 0; i < tamaño; i++) {
+      if (strcmp(dictionary[i].nombre, (yyvsp[-1].cadena)) == 0) {
+        scanf("%d", &valor_leido);
+        dictionary[i].valor = valor_leido;
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      scanf("%d", &valor_leido);
+      struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
+      var->nombre = (yyvsp[-1].cadena); 
+      var->valor = valor_leido;
+      dictionary[tamaño++] = *var;
+    }    
   }
 }
-#line 1249 "y.tab.c"
+#line 1261 "y.tab.c"
     break;
 
   case 12: /* inst_si: SI cond ENTONCES instruccion  */
-#line 85 "analizadorSintactico.y"
+#line 98 "analizadorSintactico.y"
                                       {
-      if ((yyvsp[-2].valor)) {
-        (yyval.valor) = (yyvsp[0].valor);
-      }
-      else {
-        (yyval.valor) = 0;
-      }
+    if ((yyvsp[-2].valor)) {
+      (yyval.valor) = (yyvsp[0].valor);
     }
-#line 1262 "y.tab.c"
+    if(!condicional){
+      condicional = 1;
+    }
+  }
+#line 1274 "y.tab.c"
     break;
 
   case 13: /* inst_asign: ID ASIGNACION exp  */
-#line 96 "analizadorSintactico.y"
+#line 108 "analizadorSintactico.y"
                               {
     int found = 0;
     for (int i = 0; i < tamaño; i++) {
-        if (strcmp(dictionary[i].nombre, (yyvsp[-2].cadena)) == 0) {
-            dictionary[i].valor = (yyvsp[0].valor);
-            found = 1;
-            break;
-        }
+      if (strcmp(dictionary[i].nombre, (yyvsp[-2].cadena)) == 0) {
+        dictionary[i].valor = (yyvsp[0].valor);
+        found = 1;
+        break;
+      }
     }
     if (!found) {
         struct tablaDeSimbolos* var = malloc(sizeof(struct tablaDeSimbolos));
@@ -1279,65 +1291,65 @@ yyreduce:
         dictionary[tamaño++] = *var; 
     }
 }
-#line 1283 "y.tab.c"
-    break;
-
-  case 14: /* cond: exp '<' exp  */
-#line 114 "analizadorSintactico.y"
-                   {condicional = (yyvsp[-2].valor) < (yyvsp[0].valor);}
-#line 1289 "y.tab.c"
-    break;
-
-  case 15: /* cond: exp '>' exp  */
-#line 115 "analizadorSintactico.y"
-                  {condicional = (yyvsp[-2].valor) > (yyvsp[0].valor);}
 #line 1295 "y.tab.c"
     break;
 
-  case 16: /* cond: exp '=' exp  */
-#line 116 "analizadorSintactico.y"
-                  {condicional = (yyvsp[-2].valor) == (yyvsp[0].valor);}
+  case 14: /* cond: exp '<' exp  */
+#line 126 "analizadorSintactico.y"
+                   {condicional = (yyvsp[-2].valor) < (yyvsp[0].valor);}
 #line 1301 "y.tab.c"
     break;
 
-  case 17: /* exp: exp '*' exp  */
-#line 119 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) * (yyvsp[0].valor);}
+  case 15: /* cond: exp '>' exp  */
+#line 127 "analizadorSintactico.y"
+                  {condicional = (yyvsp[-2].valor) > (yyvsp[0].valor);}
 #line 1307 "y.tab.c"
     break;
 
-  case 18: /* exp: exp '/' exp  */
-#line 120 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) / (yyvsp[0].valor);}
+  case 16: /* cond: exp '=' exp  */
+#line 128 "analizadorSintactico.y"
+                  {condicional = (yyvsp[-2].valor) == (yyvsp[0].valor);}
 #line 1313 "y.tab.c"
     break;
 
-  case 19: /* exp: exp '+' exp  */
-#line 121 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) + (yyvsp[0].valor);}
+  case 17: /* exp: exp '*' exp  */
+#line 131 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) * (yyvsp[0].valor);}
 #line 1319 "y.tab.c"
     break;
 
-  case 20: /* exp: exp '-' exp  */
-#line 122 "analizadorSintactico.y"
-                  {(yyval.valor) = (yyvsp[-2].valor) - (yyvsp[0].valor);}
+  case 18: /* exp: exp '/' exp  */
+#line 132 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) / (yyvsp[0].valor);}
 #line 1325 "y.tab.c"
     break;
 
-  case 21: /* exp: ID  */
-#line 123 "analizadorSintactico.y"
-         {(yyval.valor) = getValue((yyvsp[0].cadena));}
+  case 19: /* exp: exp '+' exp  */
+#line 133 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) + (yyvsp[0].valor);}
 #line 1331 "y.tab.c"
     break;
 
-  case 22: /* exp: CONST  */
-#line 124 "analizadorSintactico.y"
-            {(yyval.valor) = (yyvsp[0].valor);}
+  case 20: /* exp: exp '-' exp  */
+#line 134 "analizadorSintactico.y"
+                  {(yyval.valor) = (yyvsp[-2].valor) - (yyvsp[0].valor);}
 #line 1337 "y.tab.c"
     break;
 
+  case 21: /* exp: ID  */
+#line 135 "analizadorSintactico.y"
+         {(yyval.valor) = getValue((yyvsp[0].cadena));}
+#line 1343 "y.tab.c"
+    break;
 
-#line 1341 "y.tab.c"
+  case 22: /* exp: CONST  */
+#line 136 "analizadorSintactico.y"
+            {(yyval.valor) = (yyvsp[0].valor);}
+#line 1349 "y.tab.c"
+    break;
+
+
+#line 1353 "y.tab.c"
 
       default: break;
     }
@@ -1530,13 +1542,22 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 128 "analizadorSintactico.y"
+#line 140 "analizadorSintactico.y"
 
 
-int main() { 
-    printf("Manual de usuario: \n");
-    yyparse();
-    return 0;
+int main() {
+  printf("Manual de usuario:\n\n");
+  printf("-Identificadores: son de la forma una letra mayuscula de la A a la Z seguida de un digito del 0 al 9\n\n");
+  printf("-Constrantes: son cualquier combinacion de digitos\n\n");
+  printf("INSTRUCCIONES:\n\n");
+  printf("-Asignacion: para asignar usa :=, por ejemplo A1 := 3, esto asigna a A1 el valor 3\n\n");
+  printf("-Escribir: puedes escribir en pantalla un identificador o cadena, por ejemplo escribir(\"Hola\") muestra Hola o tambien escribir(A1) muestra 3\n\n");
+  printf("-Leer: puedes utilizar leer para ingresar desde pantalla un valor y asignarlo al identificador, por ejemplo leer(A1) 35, esto asigna a A1 el valor 35 que se ingresa en el terminal\n\n");
+  printf("-Si: puedes realizar un si cond entonces instruccion, donde cond es una condicion usando <,> o = y instruccion son las mencionadas anteriormente, por ejemplo si 1 < 4 entonces escribir(\"hola\"), esto mostrara Hola en el terminal\n\n");
+  printf("--------------------------------------------------------------------------\n");
+  printf("Escribe tu programa a analizar:\n\n"); 
+  yyparse();
+  return 0;
 }
 
 int getValue(char* identifier) {
